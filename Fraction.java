@@ -8,6 +8,11 @@ public class Fraction {
         this.denominator = 1;
     }
 
+    public Fraction(long numerator) {
+        this.numerator = numerator;
+        this.denominator = 1;
+    }
+
     public Fraction(long numerator, long denominator) {
 
         long gcd = gcd(numerator, denominator);
@@ -16,7 +21,6 @@ public class Fraction {
         {
             this.numerator = -this.numerator;
             this.denominator = -denominator / gcd;
-            return;
         }
         else
         {
@@ -25,6 +29,7 @@ public class Fraction {
 
     }
 
+    @Override
     public String toString() {
         if (denominator == 0)
         {
@@ -41,19 +46,53 @@ public class Fraction {
             return numerator + "/" + denominator;
     }
 
-    private static long gcd(long a, long b) {
-        if (a < 0) 
-            a = -a; // Make a non-negative
-        // if (b < 0) 
-        //     b = -b; // Make b non-negative
-        while (b != 0) 
+    private static long gcd(long n, long d) {
+        if (n < 0) 
+            n = -n; // Make n non-negative
+        if (d < 0)
+            d = -d; // Make d non-negative
+        while (d != 0) 
         {
-                long remainder = a % b;
-                a = b;
-                b = remainder;
+                long remainder = n % d;
+                n = d;
+                d = remainder;
         }
-        if (a == 0) 
-            a = 1;
-        return a;
+        if (n == 0) 
+            n = 1;
+        return n;
+    }
+
+    public Fraction divide(Fraction f) {
+        return new Fraction(this.numerator * f.denominator, this.denominator * f.numerator);
+    }
+
+    public Fraction multiply(Fraction f) {
+        return new Fraction(this.numerator * f.numerator, this.denominator * f.denominator);
+    }
+
+    public Fraction subtract(Fraction f) {
+        return new Fraction(this.numerator * f.denominator - f.numerator * this.denominator, this.denominator * f.denominator);
+    }
+
+    public Fraction add(Fraction f) {
+        return new Fraction(this.numerator * f.denominator + f.numerator * this.denominator, this.denominator * f.denominator);
+    }
+
+    public Fraction negate() {
+        if (this.numerator > 0 && this.denominator == 0)
+            return new Fraction(-1, 0);
+        else if (this.numerator < 0 && this.denominator == 0)
+            return new Fraction(1, 0);
+        else
+            return new Fraction(-this.numerator, this.denominator);
+    }
+
+    public Fraction pow(int n) {
+        if (n > 0)
+            return new Fraction((long)Math.pow(this.numerator, n), (long)Math.pow(this.denominator, n));
+        else if (n == 0)
+            return new Fraction(1, 1);
+        else
+            return new Fraction((long)Math.pow(this.denominator, -n), (long)Math.pow(this.numerator, -n));
     }
 }
